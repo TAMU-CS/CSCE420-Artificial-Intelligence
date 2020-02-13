@@ -7,13 +7,13 @@ using namespace std;
 
 enum Move
 {
-  LEFT,
   UP,
-  RIGHT,
-  DOWN
+  DOWN,
+  LEFT,
+  RIGHT
 };
 
-vector<string> moveToString{"LEFT", "UP", "RIGHT", "DOWN"};
+vector<string> moveToString{"UP", "DOWN", "LEFT", "RIGHT"};
 
 class Board
 {
@@ -102,6 +102,11 @@ public:
     return sum;
   }
 
+  int encodeWithDepth(int depth){
+    int sum = encode();
+    return sum + depth * 1000000000;
+  }
+
   void printBoard()
   {
     for (int i = 0; i < 3; i++)
@@ -133,7 +138,68 @@ public:
 };
 
 const vector<int> Board::solutionState = vector<int>{1, 2, 3, 8, 0, 4, 7, 6, 5};
-const vector<pair<int, int>> Board::moveOffset = vector<pair<int, int>>{make_pair(0, -1), make_pair(-1, 0), make_pair(0, 1), make_pair(1, 0)};
+const vector<pair<int, int>> Board::moveOffset = vector<pair<int, int>>{make_pair(-1, 0), make_pair(1, 0), make_pair(0, -1), make_pair(0, 1)};
+
+bool dfs_helper(Board board, vector<Move> moves, unordered_map<int, bool> &visited, vector<Move> &solution, int &nodeCount)
+{
+  nodeCount++;
+
+  if (board.solved())
+  {
+    for (int i = 0; i < moves.size(); i++)
+    {
+      solution.push_back(moves[i]);
+    }
+
+    return true;
+  }
+
+  for (int i = 0; i < 4; i++)
+  {
+    Move mv = static_cast<Move>(i);
+
+    if (board.canMove(mv))
+    {
+      Board newBoard = board;
+      newBoard.move(mv);
+      int hash = newBoard.encode();
+
+      if (visited.find(hash) == visited.end())
+      {
+        vector<Move> newMoves = moves;
+        newMoves.push_back(mv);
+        visited[hash] = true;
+        if (dfs_helper(newBoard, newMoves, visited, solution, nodeCount))
+        {
+          return true;
+        };
+      }
+    }
+  }
+
+  return false;
+}
+
+void dfs(Board board)
+{
+  unordered_map<int, bool> visited;
+  visited[board.encode()] = true;
+  vector<Move> solution;
+  int nodeCount = 0;
+
+  bool solved = dfs_helper(board, vector<Move>(0), visited, solution, nodeCount);
+
+  cout << "Solved with moves: \n";
+
+  for (int i = 0; i < solution.size(); i++)
+  {
+    Move mv = solution[i];
+    //board.move(mv);
+    cout << moveToString[solution[i]] << " ";
+    //board.printBoard();
+  }
+  cout << "\nNodes visited: " << nodeCount << endl;
+}
 
 void bfs(Board board)
 {
@@ -151,6 +217,7 @@ void bfs(Board board)
     Board frontBoard = bfsQueue.front().first;
     vector<Move> frontMoves = bfsQueue.front().second;
     bfsQueue.pop();
+    nodeCount++;
 
     if (frontBoard.solved())
     {
@@ -177,7 +244,6 @@ void bfs(Board board)
             vector<Move> newMoves = frontMoves;
             newMoves.push_back(mv);
             bfsQueue.push(make_pair(newBoard, newMoves));
-            nodeCount++;
           }
         }
       }
@@ -201,10 +267,87 @@ void bfs(Board board)
   cout << "Nodes visited: " << nodeCount << endl;
 }
 
+bool ids_helper(Board board, vector<Move> moves, unordered_map<int, bool> &visited, vector<Move> &solution, int &nodeCount, int curDepthFromLimit)
+{
+  nodeCount++;
+
+  if (curDepthFromLimit < 0)
+  {
+    return false;
+  }
+
+  if (board.solved())
+  {
+    for (int i = 0; i < moves.size(); i++)
+    {
+      solution.push_back(moves[i]);
+    }
+
+    return true;
+  }
+
+  for (int i = 0; i < 4; i++)
+  {
+    Move mv = static_cast<Move>(i);
+
+    if (board.canMove(mv))
+    {
+      Board newBoard = board;
+      newBoard.move(mv);
+      int hash = newBoard.encodeWithDepth(curDepthFromLimit);
+
+      if (visited.find(hash) == visited.end())
+      {
+        vector<Move> newMoves = moves;
+        newMoves.push_back(mv);
+        visited[hash] = true;
+        if (ids_helper(newBoard, newMoves, visited, solution, nodeCount, curDepthFromLimit - 1))
+        {
+          return true;
+        };
+      }
+    }
+  }
+
+  return false;
+}
+
+void ids(Board board)
+{
+
+  bool hasSolution = false;
+  int depthLimit = 0;
+  vector<Move> solution;
+
+  while (!hasSolution)
+  {
+    unordered_map<int, bool> visited;
+    visited[board.encodeWithDepth(0)] = true;
+    int nodeCount = 0;
+    hasSolution = ids_helper(board, vector<Move>(0), visited, solution, nodeCount, depthLimit);
+
+    cout << "Depth: " << depthLimit << " NodeCount: " << nodeCount << endl;
+
+    depthLimit++;
+  }
+
+  for (int i = 0; i < solution.size(); i++)
+  {
+    Move mv = solution[i];
+    //board.move(mv);
+    cout << moveToString[solution[i]] << " ";
+    //board.printBoard();
+  }
+  cout << endl;
+}
+
 int main()
 {
-  vector<int> initialState{5, 6, 7, 4, 0, 8, 3, 2, 1};
-  Board board(initialState);
-  bfs(board);
+
+  vector<int> hard{5, 6, 7, 4, 0, 8, 3, 2, 1};
+  vector<int> med{2, 8, 1, 0, 4, 3, 7, 6, 5}; //2 8 1 0 4 3 7 6 5
+  Board board(med);
+  //bfs(board);
+  dfs(board);
   return 0;
 }
