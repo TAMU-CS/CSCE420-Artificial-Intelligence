@@ -3,9 +3,8 @@
 
 #include <iostream>
 #include <vector>
-#include <queue>
 #include <utility>
-#include <unordered_map>
+#include <string>
 
 enum Move
 {
@@ -14,5 +13,7 @@ enum Move
   LEFT,
   RIGHT
 };
+
+const std::vector<std::string> MOVE_TO_STRING{"UP", "DOWN", "LEFT", "RIGHT"};
 
 #endif
