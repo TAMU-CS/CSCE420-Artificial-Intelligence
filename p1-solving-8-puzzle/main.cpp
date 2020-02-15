@@ -19,9 +19,6 @@ int main()
   //   cin >> puzzleType;
 
   // }
-
-  cout << board.numTilesOutOfPlace() << endl;
-  cout << board.manhattanDistance() << endl;
-  ids(board);
+  greedyBestFirst(board);
   return 0;
 }

@@ -12,5 +12,7 @@
 void dfs(Board board);
 void bfs(Board board);
 void ids(Board board);
+void greedyBestFirst(Board board);
+void astar(Board board);
 
 #endif

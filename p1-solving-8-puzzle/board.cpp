@@ -4,7 +4,7 @@ using namespace std;
 const vector<int> Board::solutionState = vector<int>{1, 2, 3, 8, 0, 4, 7, 6, 5};
 const vector<pair<int, int>> Board::moveOffset = vector<pair<int, int>>{make_pair(-1, 0), make_pair(1, 0), make_pair(0, -1), make_pair(0, 1)};
 
-pair<int, int> Board::getZeroPosition()
+pair<int, int> Board::getZeroPosition() const
 {
   for (int i = 0; i < 3; i++)
   {
@@ -19,7 +19,8 @@ pair<int, int> Board::getZeroPosition()
   throw "Invalid Board: Zero not found!";
 }
 
-pair<int, int> Board::getPosition(int val){
+pair<int, int> Board::getPosition(int val) const
+{
   for (int i = 0; i < 3; i++)
   {
     for (int j = 0; j < 3; j++)
@@ -81,7 +82,7 @@ void Board::operator=(const Board &b)
   zeroPos = b.zeroPos;
 }
 
-int Board::encode()
+int Board::encode() const
 {
   int sum = 0;
   int multipleOffset = 1;
@@ -96,17 +97,21 @@ int Board::encode()
   return sum;
 }
 
-int Board::encodeWithDepth(int depth)
+int Board::encodeWithDepth(int depth) const
 {
   int sum = encode();
   return sum + depth * 1000000000;
 }
 
-int Board::numTilesOutOfPlace(){
+int Board::numTilesOutOfPlace() const
+{
   int num = 0;
-  for(int i = 0; i < 3; i++){
-    for(int j = 0; j < 3; j++){
-      if(solutionState[i * 3 + j] != state[i][j]){
+  for (int i = 0; i < 3; i++)
+  {
+    for (int j = 0; j < 3; j++)
+    {
+      if (solutionState[i * 3 + j] != state[i][j])
+      {
         num++;
       }
     }
@@ -114,17 +119,19 @@ int Board::numTilesOutOfPlace(){
   return num;
 }
 
-int Board::manhattanDistance(){
+int Board::manhattanDistance() const
+{
   int totalDist = 0;
-  for(int i = 0; i < 3; i++){
-    for(int j = 0; j < 3; j++){
+  for (int i = 0; i < 3; i++)
+  {
+    for (int j = 0; j < 3; j++)
+    {
       pair<int, int> actualPosition = getPosition(solutionState[i * 3 + j]);
       totalDist += (abs(i - actualPosition.first) + abs(j - actualPosition.second));
     }
   }
   return totalDist;
 }
-
 
 void Board::printBoard()
 {
@@ -153,4 +160,9 @@ bool Board::solved()
     }
   }
   return true;
+}
+
+bool BoardCompareManhattan::operator()(Board const&b1, Board const&b2)
+{
+  return b1.manhattanDistance() < b2.manhattanDistance();
 }

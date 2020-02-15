@@ -204,10 +204,11 @@ void ids(Board board)
   cout << endl;
 }
 
-void greedyBestFirst(Board board){
-
+void greedyBestFirst(Board board, int opt)
+{
+  priority_queue<Board, vector<Board>, BoardCompareManhattan> pqueue; 
 }
 
-void astar(Board board){
-  
+void astar(Board board)
+{
 }
