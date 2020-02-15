@@ -203,3 +203,11 @@ void ids(Board board)
   }
   cout << endl;
 }
+
+void greedyBestFirst(Board board){
+
+}
+
+void astar(Board board){
+  
+}

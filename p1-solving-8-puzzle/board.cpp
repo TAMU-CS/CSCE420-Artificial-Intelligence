@@ -19,6 +19,20 @@ pair<int, int> Board::getZeroPosition()
   throw "Invalid Board: Zero not found!";
 }
 
+pair<int, int> Board::getPosition(int val){
+  for (int i = 0; i < 3; i++)
+  {
+    for (int j = 0; j < 3; j++)
+    {
+      if (state[i][j] == val)
+      {
+        return make_pair(i, j);
+      }
+    }
+  }
+  throw "Could not find position for value: " + to_string(val);
+}
+
 Board::Board(vector<int> initialState)
 {
   state = vector<vector<int>>(3, vector<int>(3, 0));
@@ -87,6 +101,30 @@ int Board::encodeWithDepth(int depth)
   int sum = encode();
   return sum + depth * 1000000000;
 }
+
+int Board::numTilesOutOfPlace(){
+  int num = 0;
+  for(int i = 0; i < 3; i++){
+    for(int j = 0; j < 3; j++){
+      if(solutionState[i * 3 + j] != state[i][j]){
+        num++;
+      }
+    }
+  }
+  return num;
+}
+
+int Board::manhattanDistance(){
+  int totalDist = 0;
+  for(int i = 0; i < 3; i++){
+    for(int j = 0; j < 3; j++){
+      pair<int, int> actualPosition = getPosition(solutionState[i * 3 + j]);
+      totalDist += (abs(i - actualPosition.first) + abs(j - actualPosition.second));
+    }
+  }
+  return totalDist;
+}
+
 
 void Board::printBoard()
 {
