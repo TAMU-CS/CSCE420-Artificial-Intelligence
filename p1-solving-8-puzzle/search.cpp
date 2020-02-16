@@ -228,11 +228,13 @@ void greedyBestFirst(Board board)
 
 void astar(Board board)
 {
+  unordered_map<int, int> checkDup;
   priority_queue<Board, vector<Board>, AStarBoardCompareManhattan> pqueue;
   pqueue.push(board);
   bool hasSolution = false;
   int nodeCount = 0;
   Board solution;
+  checkDup[board.encode()] = board.getNumMoves() + board.manhattanDistance();
 
   while (!pqueue.empty())
   {
@@ -255,7 +257,18 @@ void astar(Board board)
         {
           Board newBoard = curBoard;
           newBoard.move(mv);
-          pqueue.push(newBoard);
+
+          int hash = newBoard.encode();
+          int heuristic = newBoard.getNumMoves() + newBoard.manhattanDistance();
+
+          if (checkDup.find(hash) == checkDup.end())
+          {
+            checkDup[hash] = heuristic;
+            pqueue.push(newBoard);
+          }else if(heuristic < checkDup[hash]){
+            checkDup[hash] = heuristic;
+            pqueue.push(newBoard);            
+          }
         }
       }
     }
