@@ -5,6 +5,7 @@ using namespace std;
 
 int main()
 {
+  vector<int> dfsSolved{1, 2, 3, 8, 6, 4, 7, 0, 5};
   vector<int> easy{1, 3, 4, 8, 6, 2, 7, 0, 5};
   vector<int> med{2, 8, 1, 0, 4, 3, 7, 6, 5};
   vector<int> hard{5, 6, 7, 4, 0, 8, 3, 2, 1};
@@ -19,6 +20,6 @@ int main()
   //   cin >> puzzleType;
 
   // }
-  greedyBestFirst(board);
+  astar(hard);
   return 0;
 }

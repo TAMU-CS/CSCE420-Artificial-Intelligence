@@ -3,18 +3,38 @@
 #include "main.h"
 using namespace std;
 
-bool dfs_helper(Board board, vector<Move> moves, unordered_map<int, bool> &visited, vector<Move> &solution, int &nodeCount)
+bool BFSBoardCompareManhattan::operator()(Board const &b1, Board const &b2)
 {
+  return b1.manhattanDistance() > b2.manhattanDistance();
+}
+
+bool BFSBoardCompareTilesOutOfPlace::operator()(Board const &b1, Board const &b2)
+{
+  return b1.numTilesOutOfPlace() > b2.numTilesOutOfPlace();
+}
+
+bool AStarBoardCompareManhattan::operator()(Board const &b1, Board const &b2)
+{
+  return (b1.getNumMoves() + b1.manhattanDistance()) > (b2.getNumMoves() + b2.manhattanDistance());
+}
+
+bool AStarBoardCompareTilesOutOfPlace::operator()(Board const &b1, Board const &b2)
+{
+  return (b1.getNumMoves() + b1.numTilesOutOfPlace()) > (b2.getNumMoves() + b2.numTilesOutOfPlace());
+}
+
+Board dfs_helper(Board board, unordered_map<int, bool> &visited, int &nodeCount, int curDepth, int depthLimit)
+{
+  if (curDepth > depthLimit)
+  {
+    return board;
+  }
+
   nodeCount++;
 
   if (board.solved())
   {
-    for (int i = 0; i < moves.size(); i++)
-    {
-      solution.push_back(moves[i]);
-    }
-
-    return true;
+    return board;
   }
 
   for (int i = 0; i < 4; i++)
@@ -25,67 +45,94 @@ bool dfs_helper(Board board, vector<Move> moves, unordered_map<int, bool> &visit
     {
       Board newBoard = board;
       newBoard.move(mv);
-      int hash = newBoard.encode();
+      int hash = newBoard.encodeWithDepth(curDepth);
 
       if (visited.find(hash) == visited.end())
       {
-        vector<Move> newMoves = moves;
-        newMoves.push_back(mv);
         visited[hash] = true;
-        if (dfs_helper(newBoard, newMoves, visited, solution, nodeCount))
+        Board result = dfs_helper(newBoard, visited, nodeCount, curDepth + 1, depthLimit);
+        if (result.solved())
         {
-          return true;
-        };
+          return result;
+        }
       }
     }
   }
 
-  return false;
+  return board;
 }
 
 void dfs(Board board)
 {
   unordered_map<int, bool> visited;
   visited[board.encode()] = true;
-  vector<Move> solution;
   int nodeCount = 0;
 
-  bool solved = dfs_helper(board, vector<Move>(0), visited, solution, nodeCount);
+  Board result = dfs_helper(board, visited, nodeCount, 0, numeric_limits<int>::infinity());
 
-  cout << "Solved with moves: \n";
-
-  for (int i = 0; i < solution.size(); i++)
+  if (result.solved())
   {
-    Move mv = solution[i];
-    //board.move(mv);
-    cout << MOVE_TO_STRING[solution[i]] << " ";
-    //board.printBoard();
+    result.printBoard();
+    result.printMoves();
+  }
+  else
+  {
+    cout << "Not solved\n";
   }
   cout << "\nNodes visited: " << nodeCount << endl;
+}
+
+void ids(Board board)
+{
+
+  bool hasSolution = false;
+  int depthLimit = 0;
+  Board solution;
+
+  while (!hasSolution)
+  {
+    unordered_map<int, bool> visited;
+    visited[board.encodeWithDepth(0)] = true;
+    int nodeCount = 0;
+    solution = dfs_helper(board, visited, nodeCount, 0, depthLimit);
+    cout << "Depth: " << depthLimit << " NodeCount: " << nodeCount << endl;
+
+    hasSolution = solution.solved();
+    depthLimit++;
+  }
+
+  if (hasSolution)
+  {
+    solution.printBoard();
+    solution.printMoves();
+  }
+  else
+  {
+    cout << "Solution Does Not Exist!" << endl;
+  }
 }
 
 void bfs(Board board)
 {
   unordered_map<int, bool> checkDup;
-  queue<pair<Board, vector<Move>>> bfsQueue;
+  queue<Board> bfsQueue;
   int nodeCount = 1;
   bool hasSolution = false;
-  vector<Move> solution;
+  Board solution;
 
-  bfsQueue.push(make_pair(board, vector<Move>()));
+  bfsQueue.push(board);
   checkDup[board.encode()] = true;
 
   while (!bfsQueue.empty())
   {
-    Board frontBoard = bfsQueue.front().first;
-    vector<Move> frontMoves = bfsQueue.front().second;
+    Board frontBoard = bfsQueue.front();
     bfsQueue.pop();
     nodeCount++;
 
     if (frontBoard.solved())
     {
       hasSolution = true;
-      solution = frontMoves;
+      solution = frontBoard;
       break;
     }
     else
@@ -104,9 +151,7 @@ void bfs(Board board)
           if (checkDup.find(hash) == checkDup.end())
           {
             checkDup[hash] = true;
-            vector<Move> newMoves = frontMoves;
-            newMoves.push_back(mv);
-            bfsQueue.push(make_pair(newBoard, newMoves));
+            bfsQueue.push(newBoard);
           }
         }
       }
@@ -115,100 +160,115 @@ void bfs(Board board)
 
   if (hasSolution)
   {
-    cout << "Solved with moves: ";
-    for (int i = 0; i < solution.size(); i++)
-    {
-      cout << MOVE_TO_STRING[solution[i]] << " ";
-    }
-    cout << endl;
+    solution.printBoard();
+    solution.printMoves();
   }
   else
   {
-
     cout << "Solution Does Not Exist!" << endl;
   }
   cout << "Nodes visited: " << nodeCount << endl;
 }
 
-bool ids_helper(Board board, vector<Move> moves, unordered_map<int, bool> &visited, vector<Move> &solution, int &nodeCount, int curDepthFromLimit)
+void greedyBestFirst(Board board)
 {
-  nodeCount++;
+  unordered_map<int, bool> checkDup;
+  priority_queue<Board, vector<Board>, BFSBoardCompareManhattan> pqueue;
+  pqueue.push(board);
+  bool hasSolution = false;
+  int nodeCount = 0;
+  Board solution;
+  checkDup[board.encode()] = true;
 
-  if (curDepthFromLimit < 0)
+  while (!pqueue.empty())
   {
-    return false;
-  }
+    nodeCount++;
+    Board curBoard = pqueue.top();
+    pqueue.pop();
 
-  if (board.solved())
-  {
-    for (int i = 0; i < moves.size(); i++)
+    if (curBoard.solved())
     {
-      solution.push_back(moves[i]);
+      hasSolution = true;
+      solution = curBoard;
+      break;
     }
-
-    return true;
-  }
-
-  for (int i = 0; i < 4; i++)
-  {
-    Move mv = static_cast<Move>(i);
-
-    if (board.canMove(mv))
+    else
     {
-      Board newBoard = board;
-      newBoard.move(mv);
-      int hash = newBoard.encodeWithDepth(curDepthFromLimit);
-
-      if (visited.find(hash) == visited.end())
+      for (int i = 0; i < 4; i++)
       {
-        vector<Move> newMoves = moves;
-        newMoves.push_back(mv);
-        visited[hash] = true;
-        if (ids_helper(newBoard, newMoves, visited, solution, nodeCount, curDepthFromLimit - 1))
+        Move mv = static_cast<Move>(i);
+        if (curBoard.canMove(mv))
         {
-          return true;
-        };
+          Board newBoard = curBoard;
+          newBoard.move(mv);
+
+          int hash = newBoard.encode();
+
+          if (checkDup.find(hash) == checkDup.end())
+          {
+            checkDup[hash] = true;
+            pqueue.push(newBoard);
+          }
+        }
       }
     }
   }
 
-  return false;
-}
-
-void ids(Board board)
-{
-
-  bool hasSolution = false;
-  int depthLimit = 0;
-  vector<Move> solution;
-
-  while (!hasSolution)
+  if (hasSolution)
   {
-    unordered_map<int, bool> visited;
-    visited[board.encodeWithDepth(0)] = true;
-    int nodeCount = 0;
-    hasSolution = ids_helper(board, vector<Move>(0), visited, solution, nodeCount, depthLimit);
-
-    cout << "Depth: " << depthLimit << " NodeCount: " << nodeCount << endl;
-
-    depthLimit++;
+    solution.printBoard();
+    solution.printMoves();
   }
-
-  for (int i = 0; i < solution.size(); i++)
+  else
   {
-    Move mv = solution[i];
-    //board.move(mv);
-    cout << MOVE_TO_STRING[solution[i]] << " ";
-    //board.printBoard();
+    cout << "Solution Does Not Exist!" << endl;
   }
-  cout << endl;
-}
-
-void greedyBestFirst(Board board, int opt)
-{
-  priority_queue<Board, vector<Board>, BoardCompareManhattan> pqueue; 
+  cout << "Nodes visited: " << nodeCount << endl;
 }
 
 void astar(Board board)
 {
+  priority_queue<Board, vector<Board>, AStarBoardCompareManhattan> pqueue;
+  pqueue.push(board);
+  bool hasSolution = false;
+  int nodeCount = 0;
+  Board solution;
+
+  while (!pqueue.empty())
+  {
+    nodeCount++;
+    Board curBoard = pqueue.top();
+    pqueue.pop();
+
+    if (curBoard.solved())
+    {
+      hasSolution = true;
+      solution = curBoard;
+      break;
+    }
+    else
+    {
+      for (int i = 0; i < 4; i++)
+      {
+        Move mv = static_cast<Move>(i);
+        if (curBoard.canMove(mv))
+        {
+          Board newBoard = curBoard;
+          newBoard.move(mv);
+          pqueue.push(newBoard);
+        }
+      }
+    }
+  }
+
+  if (hasSolution)
+  {
+    solution.printBoard();
+    solution.printMoves();
+  }
+  else
+  {
+    cout << "Solution Does Not Exist!" << endl;
+  }
+  cout << "Nodes visited: " << nodeCount << endl;
 }

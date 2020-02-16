@@ -1,4 +1,5 @@
 #include "board.h"
+#include "main.h"
 using namespace std;
 
 const vector<int> Board::solutionState = vector<int>{1, 2, 3, 8, 0, 4, 7, 6, 5};
@@ -34,9 +35,26 @@ pair<int, int> Board::getPosition(int val) const
   throw "Could not find position for value: " + to_string(val);
 }
 
+Board::Board()
+{
+  state = vector<vector<int>>(3, vector<int>(3, 0));
+  moves = vector<Move>();
+
+  for (int i = 0; i < 3; i++)
+  {
+    for (int j = 0; j < 3; j++)
+    {
+      state[i][j] = solutionState[i * 3 + j];
+    }
+  }
+
+  zeroPos = getZeroPosition();
+}
+
 Board::Board(vector<int> initialState)
 {
   state = vector<vector<int>>(3, vector<int>(3, 0));
+  moves = vector<Move>();
 
   for (int i = 0; i < 3; i++)
   {
@@ -65,6 +83,7 @@ void Board::move(Move direction)
   state[zeroPos.first][zeroPos.second] = state[newPos.first][newPos.second];
   state[newPos.first][newPos.second] = 0;
   zeroPos = newPos;
+  moves.push_back(direction);
 }
 
 void Board::operator=(const Board &b)
@@ -80,19 +99,17 @@ void Board::operator=(const Board &b)
   }
 
   zeroPos = b.zeroPos;
+  moves = b.moves;
 }
 
 int Board::encode() const
 {
   int sum = 0;
   int multipleOffset = 1;
-  for (int i = 0; i < 3; i++)
+  for (int i = 0; i < 8; i++)
   {
-    for (int j = 0; j < 3; j++)
-    {
-      sum += state[i][j] * multipleOffset;
-      multipleOffset *= 10;
-    }
+    sum += state[i / 3][i % 3] * multipleOffset;
+    multipleOffset *= 10;
   }
   return sum;
 }
@@ -100,7 +117,12 @@ int Board::encode() const
 int Board::encodeWithDepth(int depth) const
 {
   int sum = encode();
-  return sum + depth * 1000000000;
+  return sum + depth * 100000000;
+}
+
+int Board::getNumMoves() const
+{
+  return moves.size();
 }
 
 int Board::numTilesOutOfPlace() const
@@ -147,6 +169,15 @@ void Board::printBoard()
   }
 }
 
+void Board::printMoves()
+{
+  for (int i = 0; i < moves.size(); i++)
+  {
+    cout << MOVE_TO_STRING[moves[i]] << " ";
+  }
+  cout << endl;
+}
+
 bool Board::solved()
 {
   for (int i = 0; i < 3; i++)
@@ -160,9 +191,4 @@ bool Board::solved()
     }
   }
   return true;
-}
-
-bool BoardCompareManhattan::operator()(Board const&b1, Board const&b2)
-{
-  return b1.manhattanDistance() < b2.manhattanDistance();
 }
