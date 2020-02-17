@@ -11,15 +11,11 @@ int main()
   vector<int> hard{5, 6, 7, 4, 0, 8, 3, 2, 1};
   Board board(easy);
 
-  //bfs(board);
+  string input;
+  cout << "Input [search type] [list] [heuristic].\n";
+  cout << "Example: greedy '(1 2 3 4 5 6 7 8 0) 'h1\n";
+  cin >> input;
 
-  // int opt;
-  // while(true){
-  //   int puzzleType;
-  //   cout << "Enter 1-easy, 2-medium, 3-hard: ";
-  //   cin >> puzzleType;
-
-  // }
-  astar(hard);
+  greedyBestFirst<AStarBoardCompareManhattan>(hard);
   return 0;
 }
