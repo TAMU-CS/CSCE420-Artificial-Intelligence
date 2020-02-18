@@ -49,7 +49,10 @@ void minmax(Node *root)
 
   while (root->children.size() > 0)
   {
-    cout << (root->next + 1) << " ";
+    cout << (root->next + 1);
+    if(root->children[root->next]->children.size() > 0){
+      cout << ", ";
+    }
     root = root->children[root->next];
   }
 

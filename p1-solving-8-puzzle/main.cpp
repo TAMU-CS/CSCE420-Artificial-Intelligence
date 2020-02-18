@@ -19,7 +19,11 @@ int main()
 
   string input;
   cout << "Type or paste input and then hit ENTER.\n";
-  cout << "Ex: (greedy '(1 2 3 4 5 6 7 8 0) 'h1)\n";
+  cout << "Ex: (dfs '(1 2 3 8 0 4 7 6 5))\n";
+  cout << "Ex: (bfs '(5 6 7 4 0 8 3 2 1))\n";
+  cout << "Ex: (ids '(5 6 7 4 0 8 3 2 1))\n";
+  cout << "Ex: (greedy '(5 6 7 4 0 8 3 2 1) 'h1)\n";
+  cout << "Ex: (astar '(5 6 7 4 0 8 3 2 1) 'h1)\n";
   cout << "Ex: (min-max '(1 (5 7) 4))\n";
   getline(cin, input);
 
@@ -27,6 +31,7 @@ int main()
   string command = getCommand(input);
   string list = getList(input);
   string heuristic = getHeuristic(input);
+  cout << endl;
 
   if (command == "dfs")
   {
@@ -105,7 +110,7 @@ string getList(string input)
     }
     i++;
   }
-  return input.substr(startList + 1, i - startList);
+  return input.substr(startList + 1, i - startList - 1);
 }
 
 string getHeuristic(string input)
