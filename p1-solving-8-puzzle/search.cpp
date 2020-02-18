@@ -23,6 +23,19 @@ bool AStarBoardCompareTilesOutOfPlace::operator()(Board const &b1, Board const &
   return (b1.getNumMoves() + b1.numTilesOutOfPlace()) > (b2.getNumMoves() + b2.numTilesOutOfPlace());
 }
 
+Board getBoardFromString(string input){
+  input = input.substr(1, input.size() - 2);
+
+  vector<int> state;
+  for(int i = 0; i < input.size(); i++){
+    if(isdigit(input[i])){
+      state.push_back(input[i] - '0');
+    }
+  }
+
+  return Board(state);
+}
+
 Board dfs_helper(Board board, unordered_map<int, bool> &visited, int &nodeCount, int curDepth, int depthLimit)
 {
   if (curDepth > depthLimit)

@@ -26,6 +26,8 @@ struct AStarBoardCompareTilesOutOfPlace {
   bool operator()(Board const &b1, Board const &b2);
 };
 
+Board getBoardFromString(string input);
+
 void dfs(Board board);
 void bfs(Board board);
 void ids(Board board);
