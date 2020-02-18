@@ -23,12 +23,15 @@ bool AStarBoardCompareTilesOutOfPlace::operator()(Board const &b1, Board const &
   return (b1.getNumMoves() + b1.numTilesOutOfPlace()) > (b2.getNumMoves() + b2.numTilesOutOfPlace());
 }
 
-Board getBoardFromString(string input){
+Board getBoardFromString(string input)
+{
   input = input.substr(1, input.size() - 2);
 
   vector<int> state;
-  for(int i = 0; i < input.size(); i++){
-    if(isdigit(input[i])){
+  for (int i = 0; i < input.size(); i++)
+  {
+    if (isdigit(input[i]))
+    {
       state.push_back(input[i] - '0');
     }
   }
@@ -81,11 +84,10 @@ void dfs(Board board)
   visited[board.encode()] = true;
   int nodeCount = 0;
 
-  Board result = dfs_helper(board, visited, nodeCount, 0, numeric_limits<int>::infinity());
+  Board result = dfs_helper(board, visited, nodeCount, 0, numeric_limits<int>::max());
 
   if (result.solved())
   {
-    result.printBoard();
     result.printMoves();
   }
   else
@@ -100,6 +102,7 @@ void ids(Board board)
 
   bool hasSolution = false;
   int depthLimit = 0;
+  int totalNodeCount = 0;
   Board solution;
 
   while (!hasSolution)
@@ -108,21 +111,25 @@ void ids(Board board)
     visited[board.encodeWithDepth(0)] = true;
     int nodeCount = 0;
     solution = dfs_helper(board, visited, nodeCount, 0, depthLimit);
-    cout << "Depth: " << depthLimit << " NodeCount: " << nodeCount << endl;
+    cout << "Depth: " << depthLimit << " NodeCount: " << nodeCount;
+    cout << " MaxNodeListSize: " << depthLimit << endl;
 
     hasSolution = solution.solved();
     depthLimit++;
+    totalNodeCount += nodeCount;
   }
 
   if (hasSolution)
   {
-    solution.printBoard();
     solution.printMoves();
   }
   else
   {
     cout << "Solution Does Not Exist!" << endl;
   }
+
+  cout << "Total Nodes Visited: " << totalNodeCount << endl;
+  cout << "MaxNodeListSize: " << depthLimit << endl;
 }
 
 void bfs(Board board)
@@ -135,6 +142,7 @@ void bfs(Board board)
 
   bfsQueue.push(board);
   checkDup[board.encode()] = true;
+  int maxNodeListSize = 0;
 
   while (!bfsQueue.empty())
   {
@@ -169,11 +177,14 @@ void bfs(Board board)
         }
       }
     }
+
+    if(bfsQueue.size() > maxNodeListSize){
+      maxNodeListSize = bfsQueue.size();
+    }
   }
 
   if (hasSolution)
   {
-    solution.printBoard();
     solution.printMoves();
   }
   else
@@ -181,4 +192,5 @@ void bfs(Board board)
     cout << "Solution Does Not Exist!" << endl;
   }
   cout << "Nodes visited: " << nodeCount << endl;
+  cout << "MaxNodeListSize: " << maxNodeListSize << endl;
 }

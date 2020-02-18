@@ -25,51 +25,54 @@ int main()
   cout << "Ex: (greedy '(5 6 7 4 0 8 3 2 1) 'h1)\n";
   cout << "Ex: (astar '(5 6 7 4 0 8 3 2 1) 'h1)\n";
   cout << "Ex: (min-max '(1 (5 7) 4))\n";
-  getline(cin, input);
+  while (getline(cin, input))
+  {
 
-  input = input.substr(1, input.size() - 2);
-  string command = getCommand(input);
-  string list = getList(input);
-  string heuristic = getHeuristic(input);
-  cout << endl;
+    input = input.substr(1, input.size() - 2);
+    string command = getCommand(input);
+    string list = getList(input);
+    string heuristic = getHeuristic(input);
+    cout << endl;
 
-  if (command == "dfs")
-  {
-    dfs(getBoardFromString(list));
-  }
-  else if (command == "bfs")
-  {
-    bfs(getBoardFromString(list));
-  }
-  else if (command == "ids")
-  {
-    ids(getBoardFromString(list));
-  }
-  else if (command == "greedy")
-  {
-    if (heuristic == "h1")
+    if (command == "dfs")
     {
-      greedyBestFirst<BFSBoardCompareTilesOutOfPlace>(getBoardFromString(list));
+      dfs(getBoardFromString(list));
     }
-    else
+    else if (command == "bfs")
     {
-      greedyBestFirst<BFSBoardCompareManhattan>(getBoardFromString(list));
+      bfs(getBoardFromString(list));
+    }
+    else if (command == "ids")
+    {
+      ids(getBoardFromString(list));
+    }
+    else if (command == "greedy")
+    {
+      if (heuristic == "h1")
+      {
+        greedyBestFirst<BFSBoardCompareTilesOutOfPlace>(getBoardFromString(list));
+      }
+      else
+      {
+        greedyBestFirst<BFSBoardCompareManhattan>(getBoardFromString(list));
+      }
+    }
+    else if (command == "astar")
+    {
+      if (heuristic == "h1")
+      {
+        astar<AStarBoardCompareTilesOutOfPlace>(getBoardFromString(list));
+      }
+      else
+      {
+        astar<AStarBoardCompareManhattan>(getBoardFromString(list));
+      }
+    }
+    else if (command == "min-max")
+    {
+      minmax(makeTree(list));
     }
   }
-  else if (command == "astar")
-  {
-    if (heuristic == "h1")
-    {
-      astar<BFSBoardCompareTilesOutOfPlace>(getBoardFromString(list));
-    }
-    else
-    {
-      astar<BFSBoardCompareManhattan>(getBoardFromString(list));
-    }    
-  }else if (command == "min-max"){
-    minmax(makeTree(list));
-  }
-
   return 0;
 }
 
@@ -138,3 +141,15 @@ string getHeuristic(string input)
 
   return input.substr(startInd + 1, input.size());
 }
+
+//(astar '(1 3 4 8 6 2 7 0 5) 'h1)
+//(astar '(2 8 1 0 4 3 7 6 5) 'h1)
+//(astar '(5 6 7 4 0 8 3 2 1) 'h1)
+
+//(astar '(1 3 4 8 6 2 7 0 5) 'h2)
+//(astar '(2 8 1 0 4 3 7 6 5) 'h2)
+//(astar '(5 6 7 4 0 8 3 2 1) 'h2)
+
+//(ids '(1 3 4 8 6 2 7 0 5))
+//(ids '(2 8 1 0 4 3 7 6 5))
+//(ids '(5 6 7 4 0 8 3 2 1))

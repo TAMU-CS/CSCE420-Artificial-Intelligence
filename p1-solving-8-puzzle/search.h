@@ -10,19 +10,23 @@
 #include <utility>
 #include <limits>
 
-struct BFSBoardCompareManhattan {
+struct BFSBoardCompareManhattan
+{
   bool operator()(Board const &b1, Board const &b2);
 };
 
-struct BFSBoardCompareTilesOutOfPlace {
+struct BFSBoardCompareTilesOutOfPlace
+{
   bool operator()(Board const &b1, Board const &b2);
 };
 
-struct AStarBoardCompareManhattan {
+struct AStarBoardCompareManhattan
+{
   bool operator()(Board const &b1, Board const &b2);
 };
 
-struct AStarBoardCompareTilesOutOfPlace {
+struct AStarBoardCompareTilesOutOfPlace
+{
   bool operator()(Board const &b1, Board const &b2);
 };
 
@@ -32,7 +36,7 @@ void dfs(Board board);
 void bfs(Board board);
 void ids(Board board);
 
-template<class comparator>
+template <class comparator>
 void greedyBestFirst(Board board)
 {
   unordered_map<int, bool> checkDup;
@@ -40,6 +44,7 @@ void greedyBestFirst(Board board)
   pqueue.push(board);
   bool hasSolution = false;
   int nodeCount = 0;
+  int maxNodeListSize = 0;
   Board solution;
   checkDup[board.encode()] = true;
 
@@ -75,11 +80,14 @@ void greedyBestFirst(Board board)
         }
       }
     }
+
+    if(pqueue.size() > maxNodeListSize){
+      maxNodeListSize = pqueue.size();
+    }
   }
 
   if (hasSolution)
   {
-    solution.printBoard();
     solution.printMoves();
   }
   else
@@ -87,9 +95,10 @@ void greedyBestFirst(Board board)
     cout << "Solution Does Not Exist!" << endl;
   }
   cout << "Nodes visited: " << nodeCount << endl;
+  cout << "MaxNodeListSize: " << maxNodeListSize << endl;
 }
 
-template<class comparator>
+template <class comparator>
 void astar(Board board)
 {
   unordered_map<int, int> checkDup;
@@ -97,6 +106,7 @@ void astar(Board board)
   pqueue.push(board);
   bool hasSolution = false;
   int nodeCount = 0;
+  int maxNodeListSize = 0;
   Board solution;
   checkDup[board.encode()] = board.getNumMoves() + board.manhattanDistance();
 
@@ -129,18 +139,23 @@ void astar(Board board)
           {
             checkDup[hash] = heuristic;
             pqueue.push(newBoard);
-          }else if(heuristic < checkDup[hash]){
+          }
+          else if (heuristic < checkDup[hash])
+          {
             checkDup[hash] = heuristic;
-            pqueue.push(newBoard);            
+            pqueue.push(newBoard);
           }
         }
       }
+    }
+
+    if(pqueue.size() > maxNodeListSize){
+      maxNodeListSize = pqueue.size();
     }
   }
 
   if (hasSolution)
   {
-    solution.printBoard();
     solution.printMoves();
   }
   else
@@ -148,6 +163,7 @@ void astar(Board board)
     cout << "Solution Does Not Exist!" << endl;
   }
   cout << "Nodes visited: " << nodeCount << endl;
+  cout << "MaxNodeListSize: " << maxNodeListSize << endl;
 }
 
 #endif

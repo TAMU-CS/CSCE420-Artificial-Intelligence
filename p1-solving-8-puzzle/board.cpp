@@ -171,11 +171,15 @@ void Board::printBoard()
 
 void Board::printMoves()
 {
+  cout << "'(";
   for (int i = 0; i < moves.size(); i++)
   {
-    cout << MOVE_TO_STRING[moves[i]] << " ";
+    cout << MOVE_TO_STRING[moves[i]];
+    if(i != moves.size() - 1){
+      cout << " ";
+    }
   }
-  cout << endl;
+  cout << ")\n";
 }
 
 bool Board::solved()
