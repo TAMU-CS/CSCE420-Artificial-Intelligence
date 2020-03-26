@@ -1,6 +1,8 @@
 #ifndef TERM_H
 #define TERM_H
 
+#include "parser.h"
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -13,7 +15,7 @@ public:
   string name;
 
   Unifiable(string);
-  Unifiable* get_unifiable(string);
+  static Unifiable* get_unifiable(string);
 
   virtual void serialize(ostream &) const;
   friend ostream &operator<<(ostream &os, const Unifiable &unifiable)
@@ -28,6 +30,7 @@ class Constant : public Unifiable
 public:
   Constant(string);
 
+  void serialize(ostream &) const;
   friend ostream &operator<<(ostream &os, const Constant &constant)
   {
     constant.serialize(os);
@@ -52,7 +55,7 @@ class Function : public Unifiable
 public:
   vector<Unifiable *> args;
 
-  Function(string);
+  Function(vector<string>);
 
   void serialize(ostream &) const;
   friend ostream &operator<<(ostream &os, const Function &function)

@@ -13,6 +13,8 @@ class Literal
 public:
   string value;
 
+  Unifiable* root;
+
   // constructor
   // input: literal string (lisp format)
   // ex: F X (H Y)

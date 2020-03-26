@@ -13,6 +13,7 @@ int main()
       Clause("(7 ((ls (john))) nil)"),
       Clause("(8 ((have (john) (b))) nil)"),
   };
+
   for(int i = 0; i < clauses.size(); i++)
     cout << "clause" << i << "\n" << clauses[i];
 
