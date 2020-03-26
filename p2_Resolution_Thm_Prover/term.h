@@ -13,6 +13,7 @@ public:
   string name;
 
   Unifiable(string);
+  Unifiable* get_unifiable(string);
 
   virtual void serialize(ostream &) const;
   friend ostream &operator<<(ostream &os, const Unifiable &unifiable)
@@ -26,7 +27,7 @@ class Constant : public Unifiable
 {
 public:
   Constant(string);
-  
+
   friend ostream &operator<<(ostream &os, const Constant &constant)
   {
     constant.serialize(os);
@@ -49,7 +50,7 @@ public:
 class Function : public Unifiable
 {
 public:
-  vector<Unifiable> args;
+  vector<Unifiable *> args;
 
   Function(string);
 
@@ -58,7 +59,7 @@ public:
   {
     function.serialize(os);
     return os;
-  }  
+  }
 };
 
 #endif

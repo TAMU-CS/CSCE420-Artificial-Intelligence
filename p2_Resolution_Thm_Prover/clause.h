@@ -21,6 +21,7 @@ class Clause{
   // input is lisp representation:
   // ex: (1 ( (P X Y) (R (F X)) ) ( (Q X (A)) )  )
   Clause(string);
+  vector<string> parse_terms(string);
 
   // override ostream operator<< for printing out
   friend ostream& operator<<(ostream&, const Clause&);
