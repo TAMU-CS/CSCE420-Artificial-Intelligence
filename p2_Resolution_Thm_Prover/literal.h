@@ -1,13 +1,16 @@
 #ifndef LITERAL_H
 #define LITERAL_H
 
+#include "term.h"
+
 #include <iostream>
 #include <string>
 
 using namespace std;
 
-class Literal{
-  public:
+class Literal
+{
+public:
   string value;
 
   // constructor
@@ -15,8 +18,7 @@ class Literal{
   // ex: F X (H Y)
   Literal(string);
 
-  // overloading to print out
-  friend ostream& operator<<(ostream& os, const Literal& dt);
+  friend ostream &operator<<(ostream &os, const Literal &dt);
 };
 
 #endif
