@@ -11,4 +11,4 @@ clause.o: clause.cpp clause.h
 	g++ -c clause.cpp
 
 clean:
-	rm *.o p1
+	rm *.o prover
