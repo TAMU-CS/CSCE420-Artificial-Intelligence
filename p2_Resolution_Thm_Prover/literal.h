@@ -5,6 +5,8 @@
 
 #include <iostream>
 #include <string>
+#include <unordered_map>
+#include <typeinfo>
 
 using namespace std;
 
@@ -18,8 +20,9 @@ public:
   // constructor
   // input: literal string (lisp format)
   // ex: F X (H Y)
-  Literal(string);
+  Literal(string, unordered_map<string, Unifiable*> &);
 
+  static unordered_map<string, Unifiable*> unify(Unifiable*, Unifiable*);
   friend ostream &operator<<(ostream &os, const Literal &dt);
 };
 
