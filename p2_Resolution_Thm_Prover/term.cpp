@@ -43,6 +43,10 @@ Unifiable *Unifiable::get_unifiable(string info, unordered_map<string, Unifiable
   }
 }
 
+bool Unifiable::Comparator(Unifiable*, Unifiable*){
+  
+}
+
 bool Unifiable::occurs(Unifiable *v) const
 {
   return typeid(*this) == typeid(Variable) && typeid(*v) == typeid(Variable) && v->name == name;
@@ -64,7 +68,7 @@ void Constant::serialize(ostream &os) const
 
 int Variable::varNum = 0;
 
-Variable::Variable(string _name) : Unifiable(_name + to_string(varNum))
+Variable::Variable(string _name) : Unifiable(to_string(varNum))
 {
   varNum++;
 }

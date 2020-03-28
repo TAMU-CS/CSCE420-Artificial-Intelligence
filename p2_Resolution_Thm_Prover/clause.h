@@ -4,6 +4,7 @@
 #include "literal.h"
 #include "parser.h"
 
+#include <algorithm>
 #include <vector>
 #include <string>
 #include <iostream>
@@ -32,6 +33,7 @@ public:
   void add(Clause &);
 
   // override ostream operator<< for printing out
+  string toStringNoNum();
   friend ostream &operator<<(ostream &, const Clause &);
 };
 

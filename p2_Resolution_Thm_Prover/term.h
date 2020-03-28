@@ -20,6 +20,7 @@ public:
   Unifiable(string);
 
   static Unifiable* get_unifiable(string, unordered_map<string, Unifiable*>&);
+  static bool Comparator(Unifiable*, Unifiable*);
 
   virtual void substitute(string, Unifiable*, int) = 0;
   virtual bool occurs(Unifiable *) const;

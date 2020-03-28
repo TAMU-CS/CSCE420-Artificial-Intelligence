@@ -10,6 +10,6 @@
 #include <utility>
 #include <string>
 
-void resolve(vector<Clause>);
+void resolve(vector<Clause>, int);
 
 #endif

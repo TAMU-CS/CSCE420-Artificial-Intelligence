@@ -67,6 +67,28 @@ void Clause::add(Clause &c2)
   getline(ss, value);
 }
 
+string Clause::toStringNoNum()
+{
+
+  // proper variable output
+  int oldVarNum = Variable::varNum;
+  Variable::varNum = 0;
+  Clause temp(value);
+  Variable::varNum = oldVarNum;
+
+  // make clause generic
+  // sort literals;
+  temp.num = 0;
+  sort(temp.pos.begin(), temp.pos.end(), Literal::Comparator);
+  sort(temp.neg.begin(), temp.neg.end(), Literal::Comparator);
+
+  string tempValue;
+  stringstream ss;
+  ss << temp;
+  getline(ss, tempValue);
+  return tempValue;
+}
+
 ostream &operator<<(ostream &os, const Clause &clause)
 {
   os << "(" << clause.num << " ";
