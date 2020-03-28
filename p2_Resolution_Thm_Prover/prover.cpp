@@ -15,17 +15,17 @@ int main()
   // };
   // resolve(howling, 0);
 
-  vector<Clause> rr = {
-      Clause("(1 ((rr (a))) ((coyote y)))"),
-      Clause("(2 ((chase z (a))) ((coyote z)))"),
-      Clause("(3 ((smart x)) ((rr x) (beep x)))"),
-      Clause("(4 nil ((coyote w) (rr u) (catch w u) (smart u)))"),
-      Clause("(5 ((frustrated s) (catch s t)) ((coyote s) (rr t) 	(chase s t)))"),
-      Clause("(6 ((beep r))  ((rr r)))"),
-      Clause("(7 ((coyote (b))) nil)"),
-      Clause("(8 nil ((frustrated (b))))"),
-  };
-  resolve(rr, 7);
+  // vector<Clause> rr = {
+  //     Clause("(1 ((rr (a))) ((coyote y)))"),
+  //     Clause("(2 ((chase z (a))) ((coyote z)))"),
+  //     Clause("(3 ((smart x)) ((rr x) (beep x)))"),
+  //     Clause("(4 nil ((coyote w) (rr u) (catch w u) (smart u)))"),
+  //     Clause("(5 ((frustrated s) (catch s t)) ((coyote s) (rr t) 	(chase s t)))"),
+  //     Clause("(6 ((beep r))  ((rr r)))"),
+  //     Clause("(7 ((coyote (b))) nil)"),
+  //     Clause("(8 nil ((frustrated (b))))"),
+  // };
+  // resolve(rr, 7);
 
   // vector<Clause> customs = {
   //     Clause("(1 ((v x) (s x (f x))) ((e x)))"),
@@ -38,14 +38,16 @@ int main()
   // };
   // resolve(customs, 0);
 
-  // unordered_map<string, Unifiable*> t1;
-  // unordered_map<string, Unifiable*> t2;
-  // Literal l1("(v x y)", t1);
-  // Variable::varNum = 0;
-  // Literal l2("(v x z z)", t2);
-  // cout << Literal::Comparator(l2, l2) << endl;
-  // cout << l1 << endl;
-  // cout << l2 << endl;
+  // vector<Clause> harmonia = {
+  //     Clause("(1 ((Grandparent x y)) ((Parent x z) (Parent z y)))"), //(~Parent(x, z) || ~Parent(z, y)) || Grandparent(x, y)
+  //     Clause("(2 ((Parent x y)) ((Mother x y)))"),
+  //     Clause("(3 ((Parent x y)) ((Father x y)))"), // -father(x,y) || parent(x,y)
+  //     Clause("(4 ((Father (Zues) (Ares))) nil)"),
+  //     Clause("(5 ((Mother (Hera) (Ares))) nil"),
+  //     Clause("(6 ((Father (Ares) (Harmonia))) nil)"),
+  //     Clause("(7 nil ((Grandparent x (Harmonia))))"),
+  // };
+  // resolve(harmonia, 0);
 
   return 0;
 }
