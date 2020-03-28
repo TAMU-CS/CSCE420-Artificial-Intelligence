@@ -3,51 +3,87 @@ using namespace std;
 
 int main()
 {
-  // vector<Clause> howling = {
-  //     Clause("(1 ((howl z)) ((hound z)))"),
-  //     Clause("(2 nil ((have x y) (cat y) (have x z) (mouse z)))"),
-  //     Clause("(3 nil ((ls w) (have w v) (howl v)))"),
-  //     Clause("(4 ((have (john) (a))) nil)"),
-  //     Clause("(5 ((cat (a)) (hound (a))) nil)"),
-  //     Clause("(6 ((mouse (b))) nil)"),
-  //     Clause("(7 ((ls (john))) nil)"),
-  //     Clause("(8 ((have (john) (b))) nil)"),
-  // };
-  // resolve(howling, 0);
+  int opt;
+  cout << "Options:" << endl;
+  cout << "1- howling" << endl;
+  cout << "2- rr" << endl;
+  cout << "3- customs" << endl;
+  cout << "4- harmonia" << endl;
+  cout << "5- kevin is healthy (custom theorem, more info on report)" << endl;
+  cout << "\nenter option: ";
 
-  // vector<Clause> rr = {
-  //     Clause("(1 ((rr (a))) ((coyote y)))"),
-  //     Clause("(2 ((chase z (a))) ((coyote z)))"),
-  //     Clause("(3 ((smart x)) ((rr x) (beep x)))"),
-  //     Clause("(4 nil ((coyote w) (rr u) (catch w u) (smart u)))"),
-  //     Clause("(5 ((frustrated s) (catch s t)) ((coyote s) (rr t) 	(chase s t)))"),
-  //     Clause("(6 ((beep r))  ((rr r)))"),
-  //     Clause("(7 ((coyote (b))) nil)"),
-  //     Clause("(8 nil ((frustrated (b))))"),
-  // };
-  // resolve(rr, 7);
+  cin >> opt;
 
-  // vector<Clause> customs = {
-  //     Clause("(1 ((v x) (s x (f x))) ((e x)))"),
-  //     Clause("(2 ((v y) (c (f y))) ((e y)))"),
-  //     Clause("(3 ((e (a))) nil)"),
-  //     Clause("(4 ((d (a))) nil)"),
-  //     Clause("(5 ((d z)) ((s (a) z)))"),
-  //     Clause("(6 nil ( (d w) (v w)))"),
-  //     Clause("(7 nil ((d r) (c r)))"),
-  // };
-  // resolve(customs, 0);
+  vector<Clause> howling = {
+      Clause("(1 ((howl z)) ((hound z)))"),
+      Clause("(2 nil ((have x y) (cat y) (have x z) (mouse z)))"),
+      Clause("(3 nil ((ls w) (have w v) (howl v)))"),
+      Clause("(4 ((have (john) (a))) nil)"),
+      Clause("(5 ((cat (a)) (hound (a))) nil)"),
+      Clause("(6 ((mouse (b))) nil)"),
+      Clause("(7 ((ls (john))) nil)"),
+      Clause("(8 ((have (john) (b))) nil)"),
+  };
 
-  // vector<Clause> harmonia = {
-  //     Clause("(1 ((Grandparent x y)) ((Parent x z) (Parent z y)))"), //(~Parent(x, z) || ~Parent(z, y)) || Grandparent(x, y)
-  //     Clause("(2 ((Parent x y)) ((Mother x y)))"),
-  //     Clause("(3 ((Parent x y)) ((Father x y)))"), // -father(x,y) || parent(x,y)
-  //     Clause("(4 ((Father (Zues) (Ares))) nil)"),
-  //     Clause("(5 ((Mother (Hera) (Ares))) nil"),
-  //     Clause("(6 ((Father (Ares) (Harmonia))) nil)"),
-  //     Clause("(7 nil ((Grandparent x (Harmonia))))"),
-  // };
-  // resolve(harmonia, 0);
+  vector<Clause> rr = {
+      Clause("(1 ((rr (a))) ((coyote y)))"),
+      Clause("(2 ((chase z (a))) ((coyote z)))"),
+      Clause("(3 ((smart x)) ((rr x) (beep x)))"),
+      Clause("(4 nil ((coyote w) (rr u) (catch w u) (smart u)))"),
+      Clause("(5 ((frustrated s) (catch s t)) ((coyote s) (rr t) 	(chase s t)))"),
+      Clause("(6 ((beep r))  ((rr r)))"),
+      Clause("(7 ((coyote (b))) nil)"),
+      Clause("(8 nil ((frustrated (b))))"),
+  };
+
+  vector<Clause> customs = {
+      Clause("(1 ((v x) (s x (f x))) ((e x)))"),
+      Clause("(2 ((v y) (c (f y))) ((e y)))"),
+      Clause("(3 ((e (a))) nil)"),
+      Clause("(4 ((d (a))) nil)"),
+      Clause("(5 ((d z)) ((s (a) z)))"),
+      Clause("(6 nil ( (d w) (v w)))"),
+      Clause("(7 nil ((d r) (c r)))"),
+  };
+
+  vector<Clause> harmonia = {
+      Clause("(1 ((Grandparent x y)) ((Parent x z) (Parent z y)))"),
+      Clause("(2 ((Parent x y)) ((Mother x y)))"),
+      Clause("(3 ((Parent x y)) ((Father x y)))"),
+      Clause("(4 ((Father (Zues) (Ares))) nil)"),
+      Clause("(5 ((Mother (Hera) (Ares))) nil"),
+      Clause("(6 ((Father (Ares) (Harmonia))) nil)"),
+      Clause("(7 nil ((Grandparent x (Harmonia))))"),
+  };
+
+  vector<Clause> kevin = {
+      Clause("(1 ((healthy x)) ((eatsHealthy x) (exercises x)))"),
+      Clause("(2 ((eatsHealthy y)) ((eatsVegetables y)))"),
+      Clause("(3 ((eatsVegetables (kevin))) nil)"),
+      Clause("(4 ((exercises (kevin))) nil)"),
+      Clause("(5 nil ((healthy kevin)))"),
+  };
+
+  switch (opt)
+  {
+  case 1:
+    resolve(howling, 0);
+    break;
+  case 2:
+    resolve(rr, 7);
+    break;
+  case 3:
+    resolve(customs, 0);
+    break;
+  case 4:
+    resolve(harmonia, 0);
+    break;
+  case 5:
+    resolve(kevin, 0);
+    break;
+  default:
+    cout << "invalid option\n";
+  }
 
   return 0;
 }
@@ -136,7 +172,7 @@ void resolve(vector<Clause> clauses, int thm)
 
           if (clauses[clauses.size() - 1].neg.size() == 0 && clauses[clauses.size() - 1].pos.size() == 0)
           {
-            cout << "FAIL!" << endl;
+            cout << "FALSE!" << endl;
             return;
           }
         }
@@ -153,7 +189,7 @@ void resolve(vector<Clause> clauses, int thm)
 
           if (clauses[clauses.size() - 1].neg.size() == 0 && clauses[clauses.size() - 1].pos.size() == 0)
           {
-            cout << "FAIL!" << endl;
+            cout << "FALSE!" << endl;
             return;
           }
         }
