@@ -51,7 +51,7 @@ int main()
       Clause("(2 ((Parent x y)) ((Mother x y)))"),
       Clause("(3 ((Parent x y)) ((Father x y)))"),
       Clause("(4 ((Father (Zues) (Ares))) nil)"),
-      Clause("(5 ((Mother (Hera) (Ares))) nil"),
+      Clause("(5 ((Mother (Hera) (Ares))) nil)"),
       Clause("(6 ((Father (Ares) (Harmonia))) nil)"),
       Clause("(7 nil ((Grandparent x (Harmonia))))"),
   };
@@ -89,7 +89,7 @@ int main()
 }
 
 void resolveHelper(unordered_map<string, bool> &dup, vector<Clause> &clauses, Clause &c1, Clause &c2, vector<Literal> &c1List,
-                   vector<Literal> &c2List, int l1, int l2)
+                   vector<Literal> &c2List, int l1, int l2, int c1Index, int c2Index)
 {
 
   // reset variable count if unification is not possible
@@ -109,7 +109,7 @@ void resolveHelper(unordered_map<string, bool> &dup, vector<Clause> &clauses, Cl
 
     //combine the two clauses
     c1.add(c2);
-    c1.num = clauses.size();
+    c1.num = clauses.size() + 1;
 
     string rawVal = c1.toStringNoNum();
     if (dup.find(rawVal) == dup.end())
@@ -117,7 +117,7 @@ void resolveHelper(unordered_map<string, bool> &dup, vector<Clause> &clauses, Cl
       dup[rawVal] = true;
       clauses.push_back(c1);
 
-      cout << clauses[clauses.size() - 1] << endl;
+      cout << c1Index << " + " << c2Index << " = " << clauses[clauses.size() - 1] << endl;
 
       for (int i = 0; i < c1.pos.size(); i++)
       {
@@ -168,7 +168,7 @@ void resolve(vector<Clause> clauses, int thm)
           Clause c1(clauses[i].value);
           Clause c2(clauses[j].value);
 
-          resolveHelper(dup, clauses, c1, c2, c1.pos, c2.neg, l1, l2);
+          resolveHelper(dup, clauses, c1, c2, c1.pos, c2.neg, l1, l2, i + 1, j + 1);
 
           if (clauses[clauses.size() - 1].neg.size() == 0 && clauses[clauses.size() - 1].pos.size() == 0)
           {
@@ -185,7 +185,7 @@ void resolve(vector<Clause> clauses, int thm)
           // make deep copys of clauses[i] and clauses[j] for c1 and c2
           Clause c1(clauses[i].value);
           Clause c2(clauses[j].value);
-          resolveHelper(dup, clauses, c1, c2, c1.neg, c2.pos, l1, l2);
+          resolveHelper(dup, clauses, c1, c2, c1.neg, c2.pos, l1, l2, i + 1, j + 1);
 
           if (clauses[clauses.size() - 1].neg.size() == 0 && clauses[clauses.size() - 1].pos.size() == 0)
           {
@@ -199,8 +199,3 @@ void resolve(vector<Clause> clauses, int thm)
 
   cout << "Theorem was not proved" << endl;
 }
-
-//Clause("(1 ((howl v2)) ((hound v2)))"),
-//Clause("(3 nil ((ls w1) (have w1 v2) (howl v2)))"),
-// subs = (z0 | v2)
-// l1 and l2 are unifiable
