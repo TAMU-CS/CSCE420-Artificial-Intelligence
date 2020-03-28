@@ -69,7 +69,6 @@ void Clause::add(Clause &c2)
 
 string Clause::toStringNoNum()
 {
-
   // proper variable output
   int oldVarNum = Variable::varNum;
   Variable::varNum = 0;

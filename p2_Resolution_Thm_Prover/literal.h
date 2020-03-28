@@ -23,7 +23,7 @@ public:
   Literal(string, unordered_map<string, Unifiable*> &);
 
   static bool Comparator(Literal& l1, Literal& l2){
-    return false; // Unifiable::Comparator(l1.root, l2.root);
+    return l1.value < l2.value;
   };
   static unordered_map<string, Unifiable*> unify(Unifiable*, Unifiable*);
   friend ostream &operator<<(ostream &os, const Literal &dt);

@@ -43,8 +43,8 @@ Unifiable *Unifiable::get_unifiable(string info, unordered_map<string, Unifiable
   }
 }
 
-bool Unifiable::Comparator(Unifiable*, Unifiable*){
-  
+bool Unifiable::Comparator(Unifiable* u1, Unifiable* u2){
+
 }
 
 bool Unifiable::occurs(Unifiable *v) const
