@@ -39,8 +39,12 @@ void perceptron::learn(const vector<float> &tInput, float tOutput)
 void perceptron::train(const vector<vector<float>> &tInput, const vector<float> &tOutput, int numCycles)
 { // train on a set of input
   // initialize the weight array
-  weights = vector<float>(tInput[0].size(), 0.0);
-  bias = 0;
+  weights = vector<float>(tInput[0].size());
+  bias = ((double)rand() / (RAND_MAX));
+  for (int i = 0; i < weights.size(); i++)
+  {
+    weights[i] = ((double)rand() / (RAND_MAX));
+  }
 
   for (int j = 0; j < numCycles; j++)
   {
