@@ -1,4 +1,13 @@
-6 4
-3 2
-3 0
-0 2
+10 3 Purchase
+Y Y N Y N N Y Y Y N
+Type GearShift Engine
+Sports Manual Gasoline
+SUV Automatic Hybrid
+Sports Manual Electric
+SUV Automatic Hybrid
+MiniVan Automatic Gasoline
+MiniVan Manual Electric
+Sports Automatic Gasoline
+SUV Manual Hybrid
+Sports Automatic Electric
+Sports Automatic Hybrid

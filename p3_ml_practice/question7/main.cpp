@@ -12,27 +12,83 @@ double entropy(const vector<int> &set);
 
 int main()
 {
-  vector<vector<int>> input;
-
+  int numExamples, numAttribs;
+  string goalName;
+  vector<string> attribNames;
+  vector<vector<string>> attribVals;
+  vector<string> examples;
   string temp;
-  while (getline(cin, temp))
-  {
-    stringstream ss(temp);
-    int entry;
-    vector<int> arr;
-    while (ss >> entry)
-    {
-      arr.push_back(entry);
-    }
+  cin >> numExamples >> numAttribs >> goalName;
 
-    input.push_back(arr);
+  for (int i = 0; i < numExamples; i++)
+  { // get examples
+    cin >> temp;
+    examples.push_back(temp);
   }
 
-  vector<int> parent = input[0];
-  input.erase(input.begin());
-  double result = info_gain(parent, input);
+  for (int i = 0; i < numAttribs; i++)
+  { // get attributes names
+    cin >> temp;
+    attribNames.push_back(temp);
+  }
 
-  cout << result << endl;
+  for (int i = 0; i < numExamples; i++)
+  { // get attribute values
+    vector<string> tempArr;
+    for (int j = 0; j < numAttribs; j++)
+    {
+      cin >> temp;
+      tempArr.push_back(temp);
+    }
+    attribVals.push_back(tempArr);
+  }
+
+  unordered_map<string, int> goalValuesIndex; // track id for each goal value
+  vector<int> parent;                         // count for each different example result
+  int count = 0;
+  for (int i = 0; i < examples.size(); i++)
+  { // for all example goal values
+    string exRes = examples[i];
+    if (goalValuesIndex.find(exRes) == goalValuesIndex.end())
+    { // example goal value does not exist
+      goalValuesIndex[exRes] = count;
+      parent.push_back(1);
+      count++;
+    }
+    else
+    {
+      parent[goalValuesIndex[exRes]]++;
+    }
+  }
+
+  for (int i = 0; i < attribNames.size(); i++)
+  { // for all attributes
+    unordered_map<string, vector<int>> attribValToGoalCount;
+    for (int j = 0; j < examples.size(); j++)
+    { // for all example values for that attribute
+      string attribVal = attribVals[j][i];
+      if (attribValToGoalCount.find(attribVal) == attribValToGoalCount.end())
+      { // attribute value isn't recorded
+        int goalValueIndex = goalValuesIndex[examples[j]];
+        attribValToGoalCount[attribVal] = vector<int>(parent.size(), 0); // set to empty goal count
+        attribValToGoalCount[attribVal][goalValueIndex]++;               // increment proper goal value recording
+      }
+      else
+      {
+        int goalValueIndex = goalValuesIndex[examples[j]];
+        attribValToGoalCount[attribVal][goalValueIndex]++; // increment proper goal value recording
+      }
+    }
+
+    vector<vector<int>> attribGoalCount;
+    for (auto it : attribValToGoalCount)
+    { // for all possible attrib values
+      attribGoalCount.push_back(it.second);
+    }
+
+    cout << attribNames[i] << " " << info_gain(parent, attribGoalCount) << endl;
+  }
+
   return 0;
 }
 
