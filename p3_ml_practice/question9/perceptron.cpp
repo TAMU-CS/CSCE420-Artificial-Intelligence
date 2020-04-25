@@ -8,7 +8,7 @@ perceptron::perceptron(float _alpha)
 
 float perceptron::calcProb(const vector<float> &input)
 {
-  float prob = bias;
+  float prob = -1.0 * bias;
   for (int i = 0; i < input.size(); i++)
   {
     prob += (input[i] * weights[i]);
@@ -28,7 +28,7 @@ void perceptron::learn(const vector<float> &tInput, float tOutput)
   float error = tOutput - networkOutput;
 
   // first weight adjustment
-  bias += alpha * error;
+  bias += alpha * error * -1.0;
 
   for (int i = 0; i < tInput.size(); i++)
   { // adjust weights: Wij = Wij + alpha * Ij * Err
@@ -40,10 +40,10 @@ void perceptron::train(const vector<vector<float>> &tInput, const vector<float> 
 { // train on a set of input
   // initialize the weight array
   weights = vector<float>(tInput[0].size());
-  bias = ((double)rand() / (RAND_MAX));
+  bias = getRandomWeight();
   for (int i = 0; i < weights.size(); i++)
   {
-    weights[i] = ((double)rand() / (RAND_MAX));
+    weights[i] = getRandomWeight();
   }
 
   for (int j = 0; j < numCycles; j++)
@@ -63,4 +63,9 @@ void perceptron::print()
     cout << it << " ";
   }
   cout << endl;
+}
+
+float perceptron::getRandomWeight()
+{ // return float between -0.5 and 0.5
+  return ((float)rand() / (RAND_MAX)) - 0.5;
 }

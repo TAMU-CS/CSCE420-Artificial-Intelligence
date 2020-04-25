@@ -19,6 +19,7 @@ private:
   float alpha;                // learning rate
   float bias;                 // bias (threshold unit)
   std::vector<float> weights; // weight of inputs
+  float getRandomWeight();    // return float between -0.5 and 0.5
 };
 
 #endif
