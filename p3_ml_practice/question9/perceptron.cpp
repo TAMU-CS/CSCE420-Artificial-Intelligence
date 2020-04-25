@@ -1,52 +1,62 @@
 #include "perceptron.h"
+using namespace std;
 
-perceptron::perceptron(float eta, int epochs)
+perceptron::perceptron(float _alpha)
 {
-  // set private variables
-  m_epochs = epochs;
-  m_eta = eta;
+  alpha = _alpha;
 }
 
-int perceptron::predict(vector<float> X)
+float perceptron::calcProb(const vector<float> &input)
 {
-  return netInput(X) > 0 ? 1 : -1; // Step function
-}
-
-float perceptron::netInput(vector<float> X)
-{
-  // p = X * wT + bias
   float prob = bias;
-
-  // matrix mutliplication X * wT
-  for (int i = 0; i < X.size(); i++)
+  for (int i = 0; i < input.size(); i++)
   {
-    prob += X[i] * m_w[i];
+    prob += (input[i] * weights[i]);
   }
 
   return prob;
 }
 
-void perceptron::fit(vector<vector<float>> X, vector<float> y)
-{
-  // Initialize bias to 0, and weights to 0
-  bias = 0;
-  for (int i = 0; i < X[0].size(); i++)
-  {
-    m_w.push_back(0);
+int perceptron::output(const vector<float> &input)
+{ // if prob is greater than or equal to 0, then return 1, else return 0
+  return calcProb(input) >= 0.0 ? 1 : 0;
+}
+
+void perceptron::learn(const vector<float> &tInput, float tOutput)
+{ // adjust weights based off Err = desiredOutput - NetworkOutput
+  float networkOutput = output(tInput);
+  float error = tOutput - networkOutput;
+
+  // first weight adjustment
+  bias += alpha * error;
+
+  for (int i = 0; i < tInput.size(); i++)
+  { // adjust weights: Wij = Wij + alpha * Ij * Err
+    weights[i] += alpha * tInput[i] * error;
   }
+}
 
-  for (int i = 0; i < m_epochs; i++)
-  { // for each epoch
-    for (int j = 0; j < X.size(); j++)
-    { // for each vector in training matrix
+void perceptron::train(const vector<vector<float>> &tInput, const vector<float> &tOutput, int numCycles)
+{ // train on a set of input
+  // initialize the weight array
+  weights = vector<float>(tInput[0].size(), 0.0);
+  bias = 0;
 
-      // calculate change to add to weightsg=
-      float update = m_eta * (y[j] - predict(X[j]));
-      for (int w = 0; w < m_w.size(); w++)
-      { // update each weight
-        m_w[w] += update * X[j][w];
-      }
-      bias = update; // update the bias term
+  for (int j = 0; j < numCycles; j++)
+  {
+    for (int i = 0; i < tInput.size(); i++)
+    {
+      learn(tInput[i], tOutput[i]);
     }
   }
+}
+
+void perceptron::print()
+{
+  cout << "P: " << bias << " ";
+  for (auto it : weights)
+  {
+    cout << it << " ";
+  }
+  cout << endl;
 }

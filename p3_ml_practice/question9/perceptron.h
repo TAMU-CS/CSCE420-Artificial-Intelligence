@@ -1,26 +1,24 @@
 #ifndef PERCEPTRON_H
 #define PERCEPTRON_H
 
-// implementation outlined by https://riptutorial.com/machine-learning/example/22618/implementing-a-perceptron-model-in-cplusplus
 #include <vector>
-
-using namespace std;
+#include <utility>
+#include <iostream>
 
 class perceptron
 {
 public:
-  perceptron(float eta, int epochs);
-  float netInput(vector<float> X);
-  int predict(vector<float> X);
-
-  // X is a training dataset or matrix of inputs
-  void fit(vector<vector<float>> X, vector<float> y);
+  perceptron(float _alpha);
+  float calcProb(const std::vector<float> &input);
+  int output(const std::vector<float> &input);
+  void learn(const std::vector<float> &tInput, float tOutput);
+  void train(const std::vector<std::vector<float>> &tInput, const std::vector<float> &tOutput, int numCycles);
+  void print();
 
 private:
-  float bias;        // perceptron bias
-  float m_eta;       // learning rate
-  int m_epochs;      // number of epochs
-  vector<float> m_w; // weights
+  float alpha;                // learning rate
+  float bias;                 // bias (threshold unit)
+  std::vector<float> weights; // weight of inputs
 };
 
 #endif
