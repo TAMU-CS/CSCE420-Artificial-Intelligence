@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <utility>
+#include <string>
 #include <iostream>
 
 class perceptron
@@ -14,6 +15,7 @@ public:
   void learn(const std::vector<float> &tInput, float tOutput);
   void train(const std::vector<std::vector<float>> &tInput, const std::vector<float> &tOutput, int numCycles);
   void print();
+  std::string getLineEquation();
 
 private:
   float alpha;                // learning rate

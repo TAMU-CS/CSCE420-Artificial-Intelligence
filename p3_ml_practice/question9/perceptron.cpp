@@ -57,12 +57,21 @@ void perceptron::train(const vector<vector<float>> &tInput, const vector<float> 
 
 void perceptron::print()
 {
-  cout << "P: " << bias << " ";
+  cout << "P: bias " << bias << " weights ";
   for (auto it : weights)
   {
     cout << it << " ";
   }
   cout << endl;
+
+  // print line
+  cout << "y = -" << weights[0] << "/" << weights[1] << "*x"
+       << " + " << bias << "/" << weights[1] << endl;
+}
+
+string perceptron::getLineEquation()
+{
+  return "-1*" + to_string(weights[0]) + "/" + to_string(weights[1]) + "*x+" + to_string(bias) + "/" + to_string(weights[1]);
 }
 
 float perceptron::getRandomWeight()

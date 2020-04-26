@@ -14,7 +14,7 @@ int main()
   // simulate the gradient descent steps for E(w) = (w + 1)(w − 1)(w − 3)(w − 4)
   // with varying w values between -2 and 6
   vector<float> wVals = {-2, -1, 0, 1, 2, 3, 4, 5, 6};
-  vector<float> alphaVals = {0.02, 0.2, 0.3, 0.4, 0.5};
+  vector<float> alphaVals = {0.01, 0.02, 0.03, 0.04, 0.05};
   gradientDescent(wVals[0], alphaVals[0]);
 
   return 0;
@@ -22,7 +22,7 @@ int main()
 
 void gradientDescent(float w, float alpha)
 {
-  for (int i = 0; i < 100; i++)
+  for (int i = 0; i < 10; i++)
   {
     float changeW = deltaW(w, alpha);
     w += changeW;

@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <ctime>
+#include <fstream>
 #include "perceptron.h"
 using namespace std;
 
@@ -9,6 +11,15 @@ void runXOR();
 
 int main()
 {
+  // random seed
+  srand(time(nullptr));
+
+  // create file with basic data points for plotting
+  ofstream pointsData;
+  pointsData.open("points.dat");
+  pointsData << "1 1\n0 1\n1 0\n0 0\n";
+  pointsData.close();
+
   runAND();
   runOR();
   runXOR();
@@ -25,16 +36,20 @@ void runAND()
       {0, 0},
   };
   vector<float> trainingOutput = {1, 0, 0, 0};
-  perceptron p(0.1);
-  p.train(trainingData, trainingOutput, 100);
-  p.print();
-  cout << "results for AND:" << endl;
-  for (int i = 0; i < trainingData.size(); i++)
+  string plotCmd = "gnuplot -p -e \"set title 'AND results'; set xlabel 'Input0'; set ylabel 'Input1'; ";
+  plotCmd += "set xrange [-0.4:1.4]; set yrange [-0.4:1.4]; plot 'points.dat' title 'Training Input'";
+
+  for (int i = 0; i < 5; i++)
   {
-    cout << p.output(trainingData[i]) << " ";
+    perceptron p(0.1);
+    p.train(trainingData, trainingOutput, 100);
+    plotCmd += ", " + p.getLineEquation();
   }
-  cout << endl
-       << endl;
+
+  // close off command
+  plotCmd += ";\"";
+
+  system(plotCmd.c_str());
 }
 
 void runOR()
@@ -46,16 +61,20 @@ void runOR()
       {0, 0},
   };
   vector<float> trainingOutput = {1, 1, 1, 0};
-  perceptron p(0.1);
-  p.train(trainingData, trainingOutput, 100);
-  p.print();
-  cout << "results for OR:" << endl;
-  for (int i = 0; i < trainingData.size(); i++)
+  string plotCmd = "gnuplot -p -e \"set title 'OR results'; set xlabel 'Input0'; set ylabel 'Input1'; ";
+  plotCmd += "set xrange [-0.4:1.4]; set yrange [-0.4:1.4]; plot 'points.dat' title 'Training Input'";
+
+  for (int i = 0; i < 5; i++)
   {
-    cout << p.output(trainingData[i]) << " ";
+    perceptron p(0.1);
+    p.train(trainingData, trainingOutput, 100);
+    plotCmd += ", " + p.getLineEquation();
   }
-  cout << endl
-       << endl;
+
+  // close off command
+  plotCmd += ";\"";
+
+  system(plotCmd.c_str());
 }
 
 void runXOR()
@@ -67,14 +86,18 @@ void runXOR()
       {0, 0},
   };
   vector<float> trainingOutput = {0, 1, 1, 0};
-  perceptron p(0.1);
-  p.train(trainingData, trainingOutput, 100);
-  p.print();
-  cout << "results for XOR:" << endl;
-  for (int i = 0; i < trainingData.size(); i++)
+  string plotCmd = "gnuplot -p -e \"set title 'XOR results'; set xlabel 'Input0'; set ylabel 'Input1'; ";
+  plotCmd += "set xrange [-0.4:1.4]; set yrange [-0.4:1.4]; plot 'points.dat' title 'Training Input'";
+
+  for (int i = 0; i < 5; i++)
   {
-    cout << p.output(trainingData[i]) << " ";
+    perceptron p(0.1);
+    p.train(trainingData, trainingOutput, 100);
+    plotCmd += ", " + p.getLineEquation();
   }
-  cout << endl
-       << endl;
+
+  // close off command
+  plotCmd += ";\"";
+
+  system(plotCmd.c_str());
 }
